@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+build/
+install/
+log/
+.DS_Store
+Thumbs.db
+.lgd-nfy0
+.ssh.code-workspace
