@@ -2,8 +2,13 @@ from pathlib import Path
 import time
 import os
 
-"実機"
-"予定"
+"""
+
+  実機
+  予定
+
+"""
+
 PWM_CHIP = Path("/sys/class/pwm/pwmchip0")
 LAM_PWM_NUM = 0
 REM_PWM_NUM = 1

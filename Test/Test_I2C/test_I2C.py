@@ -1,1 +1,0 @@
-print("Hello!World!だよ完全最新")
