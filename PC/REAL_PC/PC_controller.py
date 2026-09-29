@@ -8,9 +8,12 @@ data = {
 軸番号はOS・ドライバ・コントローラの機種で変わるので、
 本番のPCで python PC_controller.py を実行して確認し、AXIS_MAP を合わせること
 （例：Linux + Xbox系 → 右スティックは 3, 4 / Windows + Xbox系 → 2, 3 になることが多い）
+
+実機確認：スティックを前に倒すと 1（左）と 3（右）が -1 になる
+→ Windows + Xbox系の配置。4, 5 はトリガー（触らないと -1）なので絶対に使わないこと
 """
 
-AXIS_MAP = {"left_x": 0, "left_y": 1, "right_x": 3, "right_y": 4}
+AXIS_MAP = {"left_x": 0, "left_y": 1, "right_x": 2, "right_y": 3}
 DEADZONE = 0.1
 
 
