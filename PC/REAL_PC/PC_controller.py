@@ -88,9 +88,9 @@ class Controller:
             return
 
         self.left_x = self._axis("left_x")
-        self.left_y = self._axis("left_y", invert=True)
+        self.left_y = -self._axis("left_y", invert=True)
         self.right_x = self._axis("right_x")
-        self.right_y = self._axis("right_y", invert=True)
+        self.right_y = -self._axis("right_y", invert=True)
 
     def exit(self):
         if self.connected:
