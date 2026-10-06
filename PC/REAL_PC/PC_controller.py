@@ -5,6 +5,8 @@ data = {
     "Lam": controller0.left_y
 }
 
+readは_axisで二桁に丸めてるから、問題あったら教えて
+
 軸番号はOS・ドライバ・コントローラの機種で変わるので、
 本番のPCで python PC_controller.py を実行して確認し、AXIS_MAP を合わせること
 （例：Linux + Xbox系 → 右スティックは 3, 4 / Windows + Xbox系 → 2, 3 になることが多い）
@@ -30,7 +32,7 @@ def apply_deadzone(value, deadzone):
 
 class Controller:
 
-    def __init__(self, number, axis_map=None, deadzone=DEADZONE):
+    def __init__(self, number, axis_map=None, deadzone=DEADZONE):#number一つ目が0
 
         pygame.init()
         pygame.joystick.init()
@@ -47,8 +49,8 @@ class Controller:
         self.instance_id = self.joystick.get_instance_id()
         self.connected = True
 
-        needed = max(self.axis_map.values()) + 1
-        if self.joystick.get_numaxes() < needed:
+        needed = max(self.axis_map.values()) + 1#axis_mapによる必要は軸の数
+        if self.joystick.get_numaxes() < needed:#get_numaxes()はコントローラの軸の数を返す
             raise RuntimeError(f"軸が {self.joystick.get_numaxes()} 本しかありません（{needed} 本必要）")
 
         self.left_x = 0
@@ -56,11 +58,11 @@ class Controller:
         self.right_x = 0
         self.right_y = 0
 
-    def _axis(self, name, invert=False):
+    def _axis(self, name, invert=False):#いきるん外部から呼び出さんといてこの関数
         value = apply_deadzone(self.joystick.get_axis(self.axis_map[name]), self.deadzone)
         if invert:
             value = -value
-        return round(value, 2) + 0.0  # + 0.0 で -0.0 を 0.0 にそろえる
+        return round(value, 2) + 0.0  # + 0.0 で -0.0 を 0.0 にそろえれるらしい=>学びになるなぁ
 
     def read(self):#y軸前が正にしてるよ
         # 抜き差しのイベントを見る（pygame.event.pump() の代わり）
@@ -88,9 +90,9 @@ class Controller:
             return
 
         self.left_x = self._axis("left_x")
-        self.left_y = -self._axis("left_y", invert=True)
+        self.left_y = self._axis("left_y", invert=True)#ここ機能してるか不安。
         self.right_x = self._axis("right_x")
-        self.right_y = -self._axis("right_y", invert=True)
+        self.right_y = self._axis("right_y", invert=True)
 
     def exit(self):
         if self.connected:
