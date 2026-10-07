@@ -107,7 +107,7 @@ if __name__ == "__main__":#軸番号の確認用（Ctrl+Cで終了）
     clock = pygame.time.Clock()
     try:
         while True:
-            pygame.event.pump()
+            pygame.event.pump()#これでstickが更新される
             print("  ".join(f"{i}:{js.get_axis(i):+.2f}" for i in range(js.get_numaxes())), end="\r")
             clock.tick(10)
     except KeyboardInterrupt:
