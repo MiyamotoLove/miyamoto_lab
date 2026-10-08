@@ -47,7 +47,7 @@ class RaspiSocket:
 
     def start(self):
 
-        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)#TCPを利用する。
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind((self.host, self.port))
         self.server.listen(1)
@@ -59,7 +59,7 @@ class RaspiSocket:
         print(f"Connected from: {self.address}")
         self._buf = b""
         self._lines.clear()
-        self._last_rx = time.monotonic()
+        self._last_rx = time.monotonic()#rx=受信という意味
         self._halted = False
         self.connected = True
 
@@ -84,8 +84,15 @@ class RaspiSocket:
                 wait = None
             else:
                 wait = max(0.0, deadline - time.monotonic())
+    
+            #  構文: select.select(rlist, wlist, xlist[, timeout])
+            # • rlist: 読み込みを監視するファイル記述子（ソケット等）のリスト
+            # • wlist: 書き込みを監視するリスト
+            # • xlist: 例外（エラー）を監視するリスト
+            # • timeout: 待ち時間（秒数。Noneなら無制限、0ならポーリング（非ブロック））
 
-            readable, _, _ = select.select([self.client], [], [], wait)
+            readable, _, _ = select.select([self.client], [], [], wait)#裏で動くタイマてきな
+    
             if not readable:
                 return lines
 
@@ -103,8 +110,8 @@ class RaspiSocket:
 
             self._last_rx = time.monotonic()
             self._buf += chunk
-            *new_lines, self._buf = self._buf.split(b"\n")
-            lines.extend(line.decode("utf-8", errors="replace") for line in new_lines)
+            *new_lines, self._buf = self._buf.split(b"\n")#最後の行は改行が来ていないので、次回に持ち越す。*はすべての戻り値を受け取るpython独自の表記法
+            lines.extend(line.decode("utf-8", errors="replace") for line in new_lines)#extendはappendの複数版
 
             if len(self._buf) > MAX_BUFFER_BYTES:
                 print("改行のないデータが大量に来たため切断します。")
